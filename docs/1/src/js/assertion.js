@@ -1,25 +1,26 @@
 import { ErrorClass } from "./error-class.js";
-ErrorClass.regist('ImplementationError AssertionError', 'TypeAssertionError AssertionError');
+ErrorClass.regist('ImplementationError',  'AssertionError', 'TypeAssertionError AssertionError');
 // Type.assert(somveValue, a=>a.v.bln); // 値型(value)       プリミティブ型
 // Type.assert(somveValue, a=>a.r.ctn.obj); // 参照型(reference) オブジェクト型({}と区別できず紛らわしい名)
-class Type {
+
+export class Type {
     assert(v, asserter) {
         const a = asserter(new TypeAssertion(v));
         a.assert(v);
     }
 }
-class Assertion {
+export class Assertion {
     constructor(v) {this._={v:v};}
     assert(a) {throw new ImplementationError(`Assertion.assert(a)をオーバーライドしてください。`);}
 }
-class TypeAssertion extends Assertion {
+export class TypeAssertion extends Assertion {
     static throw(msg, cause) {throw new TypeAssertionError(msg, cause)}
     constructor(v) {super(v)}
     assert(a) {throw new ImplementationError(`TypeAssertion.assert(a)をオーバーライドしてください。`);}
     get p() {return new PrimitiveTypeAssertion(this._.v)}
     get r() {return new ReferenceTypeAssertion(this._.v)}
 }
-class PrimitiveTypeAssertion extends TypeAssertion {
+export class PrimitiveTypeAssertion extends TypeAssertion {
     static is(v) {return (null===this._.v || ['object','function'].every(n=>n!==typeof this._.v))}
     constructor(v) {super(v)}
     assert(a) {
@@ -33,7 +34,7 @@ class PrimitiveTypeAssertion extends TypeAssertion {
     get str() {return new StringTypeAssertion(this._.v)}
     get sym() {return new SymbolTypeAssertion(this._.v)}
 }
-class ReferenceTypeAssertion extends TypeAssertion {
+export class ReferenceTypeAssertion extends TypeAssertion {
     static is(v) {return !PrimitiveTypeAssertion.is(v)}
     constructor(v) {super(v)}
     assert(a) {

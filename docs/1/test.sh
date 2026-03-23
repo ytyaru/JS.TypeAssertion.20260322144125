@@ -11,3 +11,4 @@ echo "🚀 Bunテストを開始します..."
 
 # パスとして認識させるため、先頭に ./ を付与して実行
 bun test ./test/error-class.js --coverage
+bun test ./test/assertion.js --coverage
